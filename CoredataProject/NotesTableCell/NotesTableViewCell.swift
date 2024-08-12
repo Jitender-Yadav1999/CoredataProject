@@ -1,9 +1,7 @@
 //
 //  NotesTableViewCell.swift
 //  CoredataProject
-//
-//  Created by Jitendra Kumar 1 on 23/07/24.
-//
+
 
 import UIKit
 

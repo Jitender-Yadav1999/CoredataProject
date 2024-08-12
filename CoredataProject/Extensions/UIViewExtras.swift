@@ -1,9 +1,6 @@
 //
 //  UIViewExtras.swift
 //  CoredataProject
-//
-//  Created by Jitendra Kumar 1 on 02/08/24.
-//
 
 import Foundation
 import UIKit
