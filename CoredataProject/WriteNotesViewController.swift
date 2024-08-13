@@ -4,6 +4,7 @@
 
 
 import UIKit
+import UserNotifications
 
 class WriteNotesViewController: UIViewController,UITextViewDelegate {
     
@@ -94,6 +95,35 @@ class WriteNotesViewController: UIViewController,UITextViewDelegate {
             self.deleteNote()
         }
     }
+    
+    @IBAction func ReminderTapped(_ sender: UIBarButtonItem) {
+        // Check if notification permissions are granted
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            print("Authorization status: \(settings.authorizationStatus.rawValue)")
+            DispatchQueue.main.async {
+                if settings.authorizationStatus == .authorized {
+                    self.presentDatePicker(title: "Select Reminder Date for this Note") { [self] selectedDate in
+                        
+                        self.showToast(message: "Date Selected)", font: UIFont.systemFont(ofSize: 12.0))
+                        
+                        // Save the selected reminder date in the note
+                        self.notesModel?.reminderDate = selectedDate
+                        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+                        
+                        // Schedule the notification
+                        let title = notesModel?.heading ?? "Reminder"
+                        let body = notesModel?.text ?? "You have a reminder set for this note."
+                        self.scheduleNotification(for: selectedDate, title: title, body: body)
+                    }} else {
+                        // Permissions are not granted, show an alert to guide the user
+                        self.showNotificationSettingsAlert()
+                    }
+            }
+        }
+    }
+
+   
+
 
     private func deleteNote() {
         if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {

@@ -154,12 +154,19 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="J6T-3b-o7v">
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="trash" id="djd-pj-Xft">
-                            <color key="tintColor" systemColor="systemPinkColor"/>
-                            <connections>
-                                <action selector="deleteTapped:" destination="unZ-h5-fD3" id="l4o-aH-g7j"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem style="done" systemItem="trash" id="djd-pj-Xft">
+                                <color key="tintColor" systemColor="systemPinkColor"/>
+                                <connections>
+                                    <action selector="deleteTapped:" destination="unZ-h5-fD3" id="l4o-aH-g7j"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Item" image="bell.fill" catalog="system" style="done" id="VR7-GR-07C">
+                                <connections>
+                                    <action selector="ReminderTapped:" destination="unZ-h5-fD3" id="wxq-Yg-xBr"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="bottomConstraints" destination="Rse-B7-GU5" id="rhC-FO-VwX"/>
@@ -195,6 +202,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="bell.fill" catalog="system" width="128" height="124"/>
         <image name="line.horizontal.3.decrease.circle.fill" catalog="system" width="128" height="121"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

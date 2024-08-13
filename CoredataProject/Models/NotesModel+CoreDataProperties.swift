@@ -17,6 +17,8 @@ extension NotesModel {
     @NSManaged public var heading: String?
     @NSManaged public var text: String?
     @NSManaged public var isCompleted: Bool
+    @NSManaged public var reminderDate: Date?
+
 
 }
 

@@ -4,9 +4,10 @@
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="heading" optional="YES" attributeType="String"/>
         <attribute name="isCompleted" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="reminderDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="text" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="NotesModel" positionX="-63" positionY="-18" width="128" height="89"/>
+        <element name="NotesModel" positionX="-63" positionY="-18" width="128" height="104"/>
     </elements>
 </model>

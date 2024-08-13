@@ -18,7 +18,7 @@ extension UIViewController {
         toastLabel.layer.cornerRadius = 10
         toastLabel.clipsToBounds = true
         self.view.addSubview(toastLabel)
-        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 6.0, delay: 0.1, options: .curveEaseOut, animations: {
             toastLabel.alpha = 0.0
         }, completion: { _ in
             toastLabel.removeFromSuperview()
@@ -110,6 +110,77 @@ extension UIViewController {
     
     func updateNoNotesLabelVisibility(isHidden: Bool) {
         noNotesLabel?.isHidden = isHidden
+    }
+    
+    //date picker
+    func presentDatePicker(title: String, completion: @escaping (Date) -> Void) {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .dateAndTime
+        datePicker.preferredDatePickerStyle = .automatic
+        
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+        alert.view.addSubview(datePicker)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            let selectedDate = datePicker.date
+            completion(selectedDate)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        
+        // Add constraints to the date picker
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        datePicker.centerXAnchor.constraint(equalTo: alert.view.centerXAnchor).isActive = true
+        datePicker.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        
+        alert.view.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func scheduleNotification(for date: Date, title: String, body: String) {
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = body
+            content.sound = .default
+
+            let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+            
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("Failed to schedule notification: \(error.localizedDescription)")
+                } else {
+                    print("Notification scheduled for \(date)")
+                }
+            }
+        }
+    
+    func showNotificationSettingsAlert() {
+        let alertController = UIAlertController(
+            title: "Notifications Disabled",
+            message: "To set reminders, please enable notifications in Settings.",
+            preferredStyle: .alert
+        )
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let settingsAction = UIAlertAction(title: "Settings", style: .default) { _ in
+            // Open the app's settings
+            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(appSettings)
+            }
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(settingsAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 
