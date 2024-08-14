@@ -52,9 +52,6 @@ class WriteNotesViewController: UIViewController,UITextViewDelegate {
         }
         
         myTextView.text = notesModel?.text
-        //        if let dateToBeShown = formatDate(date: Date())  {
-        //                    myDateLabel.text = dateToBeShown
-        //                }
         myDateLabel.text = Date.formatDate(Date())
         myHeadingTextview.text = notesModel?.heading
     
@@ -64,20 +61,26 @@ class WriteNotesViewController: UIViewController,UITextViewDelegate {
         updatePlaceholderVisibility(headingTextview: myHeadingTextview, headingPlaceholderLabel: headingPlaceholderLabel)
     }
     
-    
+
     override func viewWillDisappear(_ animated: Bool) {
-        //when we hit back button means our view will disappear
-        // do not Save if the text  and heading both are empty,If the text and heading are empty, the note is deleted from the context before saving.
-        if let text = notesModel?.text, !text.isEmpty || (notesModel?.heading != nil && !notesModel!.heading!.isEmpty) {
-            (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
-        } else {
-            if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext, let note = notesModel {
+        super.viewWillDisappear(animated)
+        
+        let trimmedText = notesModel?.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedHeading = notesModel?.heading?.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext, let note = notesModel {
+            // If both heading and text are empty, delete the note
+            if let text = trimmedText, text.isEmpty, let heading = trimmedHeading, heading.isEmpty {
                 context.delete(note)
                 try? context.save()
+            } else {
+                // Save the context if there's meaningful content
+                (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
             }
         }
     }
-    
+
+   
     @objc func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
@@ -137,16 +140,30 @@ class WriteNotesViewController: UIViewController,UITextViewDelegate {
 
     //when we change something in textview then also we want to save our note
     func textViewDidChange(_ textView: UITextView) {
+        // Update the note's date, text, and heading
         if let dateString = myDateLabel.text {
             notesModel?.date = Date.parseDate(dateString)
         }
-       
-        notesModel?.text = myTextView.text
-        notesModel?.heading = myHeadingTextview.text
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        
+        let trimmedText = myTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedHeading = myHeadingTextview.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext, let note = notesModel {
+            // If both heading and text are empty, delete the note
+            if trimmedText.isEmpty && trimmedHeading.isEmpty {
+                context.delete(note)
+            } else {
+                // Otherwise, update the note's text and heading
+                notesModel?.text = trimmedText
+                notesModel?.heading = trimmedHeading
+                (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+            }
+        }
         
         updatePlaceholderVisibility(headingTextview: myHeadingTextview, headingPlaceholderLabel: headingPlaceholderLabel)
     }
+
+
     
     //to set character limit of heading
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

@@ -162,6 +162,7 @@
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Item" image="bell.fill" catalog="system" style="done" id="VR7-GR-07C">
+                                <color key="tintColor" systemColor="systemGreenColor"/>
                                 <connections>
                                     <action selector="ReminderTapped:" destination="unZ-h5-fD3" id="wxq-Yg-xBr"/>
                                 </connections>
@@ -212,6 +213,9 @@
         </systemColor>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
